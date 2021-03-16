@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# phpunit --bootstrap src/autoload.php tests
-/usr/bin/php ./vendor/bin/phpunit --bootstrap src/autoload.php tests
