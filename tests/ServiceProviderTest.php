@@ -55,6 +55,6 @@ final class ServiceProviderTest extends TestCase
         static::assertInstanceOf(Service::class, $test);
         static::assertSame('TestClass', $test->test());
 
-        static::assertSame('TestClass', $this->definitions->getParameters(Service::class));
+        static::assertSame(['TestClass'], $this->definitions->getParameters(Service::class));
     }
 }
