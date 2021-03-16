@@ -78,7 +78,7 @@ final class ServiceContainerTest extends TestCase
     public function testGetServiceWithParametersAndServiceClass(): void
     {
         $this->definitions->setService('test', 'TestParameters');
-        $this->definitions->setParameters(Hello::class, [new Hello(), 'No Defaults']);
+        $this->definitions->setParameters(TestParameters::class, [new Hello(), 'No Defaults']);
 
         $service = $this->services->getService('test');
         static::assertInstanceOf(TestParameters::class, $service);
