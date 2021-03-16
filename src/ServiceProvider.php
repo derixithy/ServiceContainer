@@ -13,17 +13,34 @@ final class ServiceProvider implements ServiceInterface
         $this->definitions = $definitions;
     }
 
+    /**
+     * Creates or returns a service
+     * @param  string $name Service name
+     * @return object       Service Instance
+     * @throws Exception
+     */
     public function get(string $name): object
     {
         return $this->services->getService($name);
     }
 
+    /**
+     * Returns if service is registered
+     * @param  string $name Service name
+     * @return bool         Service exists
+     */
     public function has(string $name): bool
     {
         return $this->services->hasService($name);
     }
 
-    public function add(string $name, string $class, array $parameters = [])
+    /**
+     * Adds new service to the DefinitionsContainer
+     * @param string $name       Service name
+     * @param string $class      Service class
+     * @param array  $parameters Service parmeters
+     */
+    public function add(string $name, string $class, array $parameters = []) : void
     {
         $this->definitions->setService($name, $class);
 
