@@ -3,7 +3,7 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-final class Test
+final class Hello
 {
     public function test(): string
     {
@@ -13,16 +13,16 @@ final class Test
 
 final class TestParameters
 {
-    private Test $test;
+    private Hello $test;
     private string $text;
 
-    public function __construct(Test $test, string $text = 'Hello World')
+    public function __construct(Hello $test, string $text = 'Hello World')
     {
         $this->text = $text;
         $this->test = $test;
     }
 
-    public function test(): Test
+    public function test(): Hello
     {
         return $this->test;
     }
@@ -38,7 +38,7 @@ final class ServiceContainerTest extends TestCase
     private ServiceContainer $services;
     private DefinitionContainer $provider;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->definitions = new DefinitionContainer();
         $this->services = new ServiceContainer(
@@ -48,10 +48,10 @@ final class ServiceContainerTest extends TestCase
 
     public function testGetServiceWithoutParameters(): void
     {
-        $this->definitions->setService('test', 'Test');
+        $this->definitions->setService('test', 'Hello');
 
         $service = $this->services->getService('test');
-        $this->assertInstanceOf(Test::class, $service);
+        static::assertInstanceOf(Hello::class, $service);
     }
 
     public function testGetServiceWithParametersAndDefaults(): void
@@ -59,32 +59,30 @@ final class ServiceContainerTest extends TestCase
         $this->definitions->setService('test', 'TestParameters');
 
         $service = $this->services->getService('test');
-        $this->assertInstanceOf(TestParameters::class, $service);
+        static::assertInstanceOf(TestParameters::class, $service);
 
-        $this->assertInstanceOf(Test::class, $service->test());
+        static::assertInstanceOf(Hello::class, $service->test());
     }
 
     public function testGetServiceWithParametersAndServiceName(): void
     {
         $this->definitions->setService('test', 'TestParameters');
-        $this->definitions->setParameters('test', [new Test(), 'No Defaults']);
+        $this->definitions->setParameters('test', [new Hello(), 'No Defaults']);
 
         $service = $this->services->getService('test');
-        $this->assertInstanceOf(TestParameters::class, $service);
+        static::assertInstanceOf(TestParameters::class, $service);
 
-        $this->assertEquals([new Test(), 'No Defaults'], $this->definitions->getParameters(TestParameters::class));
-        $this->assertEquals('No Defaults', $service->text());
+        static::assertSame('No Defaults', $service->text());
     }
 
     public function testGetServiceWithParametersAndServiceClass(): void
     {
         $this->definitions->setService('test', 'TestParameters');
-        $this->definitions->setParameters(Test::class, [new Test(), 'No Defaults']);
+        $this->definitions->setParameters(Hello::class, [new Hello(), 'No Defaults']);
 
         $service = $this->services->getService('test');
-        $this->assertInstanceOf(TestParameters::class, $service);
+        static::assertInstanceOf(TestParameters::class, $service);
 
-        $this->assertEquals([new Test(), 'No Defaults'], $this->definitions->getParameters(TestParameters::class));
-        $this->assertEquals('No Defaults', $service->text());
+        static::assertSame('No Defaults', $service->text());
     }
 }
